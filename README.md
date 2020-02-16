@@ -10,7 +10,7 @@ Faculty of Science, Charles University
 
 ## Overview
 
-This repository contains scripts provided as proof-of-concept for reducing dimensionality of cytometry data using a lower-dimensional projection in latent space of an auto-encoder (AE). Previously published work [1, 2, 3] showcases the use of auto-encoders with objective functions designed for clustering of events. Moreover, the use of AEs for dimensionality reduction of single-cell data (scRNA-seq, cytometry) is featured in some recent publications [4, 5].
+This repository contains scripts provided as proof-of-concept for clustering cytometry data using a lower-dimensional projection in latent space of an auto-encoder (AE). Previously published work [1, 2, 3] showcases the use of auto-encoders with objective functions designed for clustering of events. Moreover, the use of AEs for dimensionality reduction of single-cell data (scRNA-seq, cytometry) is featured in some recent publications [4, 5].
 
 On the other hand, the approach shown here is extremely simplistic. It serves as an initial attempt to evaluate the change in quality of clustering with using the dimensionality reduction step. A portion of annotated data provided with [6] is used for building auto-encoder models with various latent space dimensionality (45, 40, 35, 30, 25, 20, 15, 10, 5, 2). Afterward, both the original data and each lower-dimensional projection thereof are clustered using a 30-by-30 FlowSOM grid (and subsequent meta-clustering) [7] and *k*-means clustering. The quality of each set of cluster assignments is then evaluated using pairwise F1-scores:
 

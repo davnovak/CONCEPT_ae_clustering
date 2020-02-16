@@ -101,16 +101,16 @@ ae_projection <- function(latent_dim = 20L, input_data) {
 
 ## Create projections with different latent space dimensions
 
-projections <- list(proj.45 = vae_projection(45L, efcs),
-                    proj.40 = vae_projection(40L, efcs),
-                    proj.35 = vae_projection(35L, efcs),
-                    proj.30 = vae_projection(30L, efcs),
-                    proj.25 = vae_projection(25L, efcs),
-                    proj.20 = vae_projection(20L, efcs),
-                    proj.15 = vae_projection(15L, efcs),
-                    proj.10 = vae_projection(10L, efcs),
-                    proj.5  = vae_projection(5L, efcs),
-                    proj.2  = vae_projection(2L, efcs))
+projections <- list(proj.45 = ae_projection(45L, efcs),
+                    proj.40 = ae_projection(40L, efcs),
+                    proj.35 = ae_projection(35L, efcs),
+                    proj.30 = ae_projection(30L, efcs),
+                    proj.25 = ae_projection(25L, efcs),
+                    proj.20 = ae_projection(20L, efcs),
+                    proj.15 = ae_projection(15L, efcs),
+                    proj.10 = ae_projection(10L, efcs),
+                    proj.5  = ae_projection(5L, efcs),
+                    proj.2  = ae_projection(2L, efcs))
 
 ## For original data & for all projections:
 #### train a SOM with 30 x 30 Kohonen layer & apply hierarchical clustering for meta-cluster generation
