@@ -88,4 +88,4 @@ Then, run the script `run_analysis.R` to produce the above images. The script is
 
 [8] Van Der Maaten LJP, Hinton GE. Visualizing high-dimensional data using t-SNE. J Mach Learn Res 2008;92579–2605.
 
-[9] 1. McInnes L, Healy J, Melville J. UMAP : Uniform Manifold Approximation and Projection for Dimension Reduction [Epub ahead of print].
+[9] McInnes L, Healy J, Melville J. UMAP : Uniform Manifold Approximation and Projection for Dimension Reduction [Epub ahead of print].
