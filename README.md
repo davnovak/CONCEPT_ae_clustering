@@ -58,7 +58,11 @@ We also generate plots showing that even an (overly) simplistic AE-generated 2-d
 
 ## Results
 
-Will add these soon.
+![Latent space variable projection](2ae.png)
+
+![Comparison with other dimensionality reduction methods](2dimred.png)
+
+![F1-scores](f1scores.png)
 
 ## How to run the example yourself
 

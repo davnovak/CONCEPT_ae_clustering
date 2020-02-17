@@ -13,7 +13,7 @@
 ## Load packages
 
 pkgs    <- rownames(installed.packages())
-reqs    <- c('flowCore', 'keras', 'FlowSOM', 'tidyverse', 'Rtsne', 'uwot', 'gridExtra')
+reqs    <- c('flowCore', 'keras', 'tensorflow', 'FlowSOM', 'tidyverse', 'Rtsne', 'uwot', 'gridExtra')
 if (length(reqs[!reqs %in% pkgs] -> missing) > 0) stop(paste0('Missing packages: ', paste(missing, collapse = ', '), '.'))
 for (pkg in reqs) library(pkg, character.only = T)
 
@@ -39,7 +39,7 @@ efcs         <- ff@exprs[idcs_in_fcs, ]
 efcs         <- efcs[, !colnames(efcs) %in% c('Time', 'Cell_length', 'beadDist')] # omit some parameters
 
 # Transform the data: cofactor 1/5 is good for CyTOF data (around 1/120 for flow)
-efcs <- asinh(efcs/5)
+efcs <- asinh(efcs/120)
 nc   <- ncol(efcs)
 
 rm(ff)
@@ -65,8 +65,7 @@ ae_projection <- function(latent_dim = 20L, input_data) {
   
   model %>%
     # Encoder
-    layer_dropout(0.2, input_shape = nc) %>% # dropout layer for regularisation
-    layer_dense(units = 128, activation = 'selu') %>%
+    layer_dense(units = 128, activation = 'selu', input_shape = nc) %>%
     layer_dense(units = 256, activation = 'selu') %>%
     layer_dense(units = 512, activation = 'selu') %>%
     layer_dense(units = 64,  activation = 'selu') %>%
@@ -88,7 +87,7 @@ ae_projection <- function(latent_dim = 20L, input_data) {
   model %>% fit(
     x = train_data,
     y = train_data,
-    epochs = 20
+    epochs = 30
   )
   
   latent <- keras_model(
@@ -111,6 +110,8 @@ projections <- list(proj.45 = ae_projection(45L, efcs),
                     proj.10 = ae_projection(10L, efcs),
                     proj.5  = ae_projection(5L, efcs),
                     proj.2  = ae_projection(2L, efcs))
+
+saveRDS(projections, 'projections.RDS')
 
 ## For original data & for all projections:
 #### train a SOM with 30 x 30 Kohonen layer & apply hierarchical clustering for meta-cluster generation
@@ -139,6 +140,8 @@ proj.metaclusters  <- lapply(proj.clustered.som, function(x)
 
 efcs.clustered.kmeans <- kmeans(efcs, iter.max = 50L, centers = n_pops)
 proj.clustered.kmeans <- lapply(projections, function(x) kmeans(x, iter.max = 50L, centers = n_pops))
+
+saveRDS(list(efcs.metaclusters, proj.metaclusters, efcs.clustered.kmeans, proj.clustered.kmeans), 'clustering.RDS')
 
 ## Define function for computing F1-score
 
@@ -232,8 +235,8 @@ saveRDS(f1.scores, 'f1_scores.RDS')
 
 ## Generate plot of F1-scores 
 
-p.f1 <- ggplot(f1.scores, aes(x = factor(latent_dim), y = f_score)) + geom_point(aes(colour = method), size = 10) +
-        theme_light() + ggtitle('Clustering pairwise F1-scores', subtitle = paste0('Original data dimensionality: ', nc)) +
+p.f1 <- ggplot(f1.scores, aes(x = factor(latent_dim), y = f_score)) + geom_point(aes(colour = method), size = 3) +
+        theme_linedraw() + ggtitle('Clustering pairwise F1-scores', subtitle = paste0('Original data dimensionality: ', nc)) +
         labs(y = 'F1-score', x = 'data dimension')
   
 ## Generate plot of 2-dimensional AE projection
@@ -241,7 +244,7 @@ p.f1 <- ggplot(f1.scores, aes(x = factor(latent_dim), y = f_score)) + geom_point
 df   <- mutate(as.data.frame(projections$proj.2), class = as.factor(labs))
 p.ae <- ggplot(df, aes(x = X1, y = X2, colour = class)) + geom_point(size = .5) +
         ggtitle('Latent variable projection') +  labs(y = 'component 2', x = 'component 1') +
-        guides(colour = guide_legend(override.aes = list(size = 10)), legend.text = element_text(size = 3))
+        guides(colour = guide_legend(override.aes = list(size = 2)), legend.text = element_text(size = 3))
 
 ## Generate plot of 2-dimensional t-SNE projection
 
