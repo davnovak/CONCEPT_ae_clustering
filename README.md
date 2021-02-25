@@ -8,6 +8,8 @@ Faculty of Science, Charles University
 
 ---
 
+*Note from 25 Feb 2021: the pairwise F1 score isn't the best evaluation measure, I would used something more sensible today. Be careful not to conflate it with average F1 score of cluster-to-population matches.*
+
 ## Overview
 
 This repository contains scripts provided as proof-of-concept for clustering cytometry data using a lower-dimensional projection in latent space of an auto-encoder (AE). Previously published work [1, 2, 3] showcases the use of auto-encoders with objective functions designed for clustering of events. Moreover, the use of AEs for dimensionality reduction of single-cell data (scRNA-seq, cytometry) is featured in some recent publications [4, 5].
